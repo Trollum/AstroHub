@@ -267,10 +267,10 @@ void MainWindow::readData()
             break;
         case 'N':
             ui->Temperature2_Display->display(val.toDouble());
-            updateHeaters();
             break;
         case 'W':
             ui->Humidity_Display->display(val.toDouble());
+            updateHeaters();
             break;
         case 'D':
             ui->DewPoint_Display->display(val.toDouble());
