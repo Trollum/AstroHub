@@ -70,7 +70,7 @@ void setup()
     
   timer.every(500, readPosition);
   timer.every(1000, readVoltage);
-  timer.every(1000, readNTC);
+  //timer.every(1000, readNTC);
   if (chk == DHTLIB_OK) timer.every(3000, readSensors);
 }
 
