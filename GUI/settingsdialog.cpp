@@ -40,10 +40,13 @@
 #include <QSerialPortInfo>
 #include <QIntValidator>
 #include <QLineEdit>
+#include <QDebug>
 
 QT_USE_NAMESPACE
 
 static const char blankString[] = QT_TRANSLATE_NOOP("SettingsDialog", "N/A");
+extern int stepperDir;
+extern double VDivider;
 
 SettingsDialog::SettingsDialog(QWidget *parent) :
     QDialog(parent),
@@ -56,6 +59,8 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
     ui->baudRateBox->setInsertPolicy(QComboBox::NoInsert);
 
     connect(ui->applyButton, SIGNAL(clicked()),
+            this, SLOT(apply()));
+    connect(ui->applyButton_2, SIGNAL(clicked()),
             this, SLOT(apply()));
     connect(ui->serialPortInfoListBox, SIGNAL(currentIndexChanged(int)),
             this, SLOT(showPortInfo(int)));
@@ -97,6 +102,9 @@ void SettingsDialog::showPortInfo(int idx)
 void SettingsDialog::apply()
 {
     updateSettings();
+    if (ui->Dir_Check->isChecked()) stepperDir = -1;
+    else stepperDir = 1;
+    VDivider = ui->VDivider_Edit->value();
     hide();
 }
 
@@ -204,4 +212,14 @@ void SettingsDialog::updateSettings()
     currentSettings.stringFlowControl = ui->flowControlBox->currentText();
 
     currentSettings.localEchoEnabled = ui->localEchoCheckBox->isChecked();
+}
+
+void SettingsDialog::on_tabWidget_tabBarClicked(int index)
+{
+    if (index == 1)
+    {
+        if (stepperDir == -1) ui->Dir_Check->setChecked(true);
+        else ui->Dir_Check->setChecked(false);
+        ui->VDivider_Edit->setValue(VDivider);
+    }
 }

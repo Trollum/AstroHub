@@ -60,6 +60,7 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
     int P1, P2, P3, P4, P5;
+    long tempDisp;
     QString P1Name, P2Name, P3Name, P4Name, P5Name;
     bool ok;
 
@@ -112,6 +113,8 @@ private slots:
     void on_Move_Button_clicked();
 
     void on_MoveTo_Button_clicked();
+
+    void moveStepper(int steps);
 
     void on_Pos1_Button_clicked();
 

@@ -51,7 +51,8 @@
 QString send;
 int TextBrowserLines = 0;
 int PWMtemp;
-
+int stepperDir;
+double VDivider;
 
 //! [0]
 MainWindow::MainWindow(QWidget *parent) :
@@ -111,7 +112,9 @@ MainWindow::~MainWindow()
     out << P4 << endl;
     out << ui->Pos5_Button->text() << endl;
     out << P5 << endl;
-    out << ui->Motor_Display->value();
+    out << ui->Motor_Display->value() << endl;
+    out << stepperDir << endl;
+    out << VDivider;
 
     delete settings;
     delete ui;
@@ -140,46 +143,12 @@ void MainWindow::openSerialPort()
     serial->setStopBits(p.stopBits);
     serial->setFlowControl(p.flowControl);
 
-    int it = 1;
-    QString filename = QDir::currentPath() + "/sett.cfg";
-    QFile file(filename);
-    if (!file.open(QIODevice::ReadOnly)) QMessageBox::information(0, "error", file.errorString());
-    QTextStream in(&file);
-
-    while (!in.atEnd())
-    {
-        QString line = in.readLine();
-        switch (it)
-        {
-        case 1: ui->Pos1_Button->setText(line); break;
-        case 2: P1 = line.toInt(); break;
-        case 3: ui->Pos2_Button->setText(line); break;
-        case 4: P2 = line.toInt(); break;
-        case 5: ui->Pos3_Button->setText(line); break;
-        case 6: P3 = line.toInt(); break;
-        case 7: ui->Pos4_Button->setText(line); break;
-        case 8: P4 = line.toInt(); break;
-        case 9: ui->Pos5_Button->setText(line); break;
-        case 10: P5 = line.toInt(); break;
-        case 11:
-            //ui->Motor_Display->display(line.toInt());
-            send = "I:";
-            send.append(line);
-            send.append('\n');
-            serial->write(send.toLocal8Bit());
-            break;
-        case 12:
-            break;
-        }
-
-        it++;
-    }
-
-    file.close();
+    send = "I:";
+    send.append(QString::number(tempDisp));
+    send.append('\n');
+    serial->write(send.toLocal8Bit());
 }
-//! [4]
 
-//! [5]
 void MainWindow::closeSerialPort()
 {
     if (serial->isOpen())
@@ -276,10 +245,10 @@ void MainWindow::readData()
             ui->DewPoint_Display->display(val.toDouble());
             break;
         case 'V':
-            ui->Vcc_Display->display((val.toDouble()/1023)*12.5);
+            ui->Vcc_Display->display((val.toDouble()/1023)*5*VDivider);
             break;
         case 'C':
-            ui->Vreg_Display->display((val.toDouble()/1023)*12.4);
+            ui->Vreg_Display->display((val.toDouble()/1023)*5*VDivider);
             break;
         case 'O':
             ui->Motor_Display->display(val.toInt());
@@ -325,6 +294,42 @@ void MainWindow::initialize()
     ui->PWM3_Slider->setDisabled(true);
     ui->PWM4_Heater->setDisabled(true);
     ui->PWM4_Slider->setDisabled(true);
+
+    int it = 1;
+    QString filename = QDir::currentPath() + "/sett.cfg";
+    QFile file(filename);
+    if (!file.open(QIODevice::ReadOnly)) QMessageBox::information(0, "error", file.errorString());
+    QTextStream in(&file);
+
+    while (!in.atEnd())
+    {
+        QString line = in.readLine();
+        //qDebug() << line << endl;
+        switch (it)
+        {
+        case 1: ui->Pos1_Button->setText(line); break;
+        case 2: P1 = line.toInt(); break;
+        case 3: ui->Pos2_Button->setText(line); break;
+        case 4: P2 = line.toInt(); break;
+        case 5: ui->Pos3_Button->setText(line); break;
+        case 6: P3 = line.toInt(); break;
+        case 7: ui->Pos4_Button->setText(line); break;
+        case 8: P4 = line.toInt(); break;
+        case 9: ui->Pos5_Button->setText(line); break;
+        case 10: P5 = line.toInt(); break;
+        case 11: tempDisp = line.toInt(); break;
+        case 12:
+            if (line.toInt() == 0) stepperDir = -1;
+            else stepperDir = line.toInt();
+            break;
+        case 13: VDivider = line.toDouble(); break;
+        case 14: break;
+        }
+
+        it++;
+    }
+
+    file.close();
 }
 
 void MainWindow::updateHeaters()
@@ -498,38 +503,22 @@ void MainWindow::on_PWM4_Slider_sliderReleased()
 
 void MainWindow::on_P1000_Button_clicked()
 {
-    send = "M:1000";
-    textBrowserAppend(send);
-    send.append('\n');
-
-    serial->write(send.toLocal8Bit());
+    moveStepper(1000);
 }
 
 void MainWindow::on_P100_Button_clicked()
 {
-    send = "M:100";
-    textBrowserAppend(send);
-    send.append('\n');
-
-    serial->write(send.toLocal8Bit());
+    moveStepper(100);
 }
 
 void MainWindow::on_P10_Button_clicked()
 {
-    send = "M:10";
-    textBrowserAppend(send);
-    send.append('\n');
-
-    serial->write(send.toLocal8Bit());
+    moveStepper(10);
 }
 
 void MainWindow::on_P1_Button_clicked()
 {
-    send = "M:1";
-    textBrowserAppend(send);
-    send.append('\n');
-
-    serial->write(send.toLocal8Bit());
+    moveStepper(1);
 }
 
 void MainWindow::on_Stop_Button_clicked()
@@ -543,52 +532,27 @@ void MainWindow::on_Stop_Button_clicked()
 
 void MainWindow::on_M1_Button_clicked()
 {
-    send = "M:-1";
-    textBrowserAppend(send);
-    send.append('\n');
-
-    serial->write(send.toLocal8Bit());
+    moveStepper(-1);
 }
 
 void MainWindow::on_M10_Button_clicked()
 {
-    send = "M:-10";
-    textBrowserAppend(send);
-    send.append('\n');
-
-    serial->write(send.toLocal8Bit());
+    moveStepper(-10);
 }
 
 void MainWindow::on_M100_Button_clicked()
 {
-    send = "M:-100";
-    textBrowserAppend(send);
-    send.append('\n');
-
-    serial->write(send.toLocal8Bit());
+    moveStepper(-100);
 }
 
 void MainWindow::on_M1000_Button_clicked()
 {
-    send = "M:-1000";
-    textBrowserAppend(send);
-    send.append('\n');
-
-    serial->write(send.toLocal8Bit());
+    moveStepper(-1000);
 }
 
 void MainWindow::on_Move_Button_clicked()
 {
-    send = "M:";
-    if (ui->Move_Edit->text() != "" && ui->Move_Edit->text() != "0")
-    {
-        send.append(ui->Move_Edit->text());
-        textBrowserAppend(send);
-        send.append('\n');
-
-        serial->write(send.toLocal8Bit());
-    }
-
+    if (ui->Move_Edit->text() != "" && ui->Move_Edit->text() != "0") moveStepper(ui->Move_Edit->text().toInt());
     ui->Move_Edit->clear();
 }
 
@@ -603,11 +567,20 @@ void MainWindow::on_MoveTo_Button_clicked()
 
         serial->write(send.toLocal8Bit());
     }
-ui->Motor_Display->display(ui->MoveTo_Edit->text().toInt());
+
+    ui->Motor_Display->display(ui->MoveTo_Edit->text().toInt());
     ui->MoveTo_Edit->clear();
 }
 
-//QInputDialog
+void MainWindow::moveStepper(int steps)
+{
+    send = "M:";
+    send.append(QString::number(steps * stepperDir));
+    textBrowserAppend(send);
+    send.append('\n');
+
+    serial->write(send.toLocal8Bit());
+}
 
 void MainWindow::on_Pos1_Button_clicked()
 {

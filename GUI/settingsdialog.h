@@ -81,6 +81,8 @@ private slots:
     void checkCustomBaudRatePolicy(int idx);
     void checkCustomDevicePathPolicy(int idx);
 
+    void on_tabWidget_tabBarClicked(int index);
+
 private:
     void fillPortsParameters();
     void fillPortsInfo();
