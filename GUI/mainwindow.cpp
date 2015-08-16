@@ -330,6 +330,12 @@ void MainWindow::initialize()
     }
 
     file.close();
+
+    ui->Pos1_Button->setToolTip("go to " + QString::number(P1));
+    ui->Pos1_Button->setToolTip("go to " + QString::number(P2));
+    ui->Pos1_Button->setToolTip("go to " + QString::number(P3));
+    ui->Pos1_Button->setToolTip("go to " + QString::number(P4));
+    ui->Pos1_Button->setToolTip("go to " + QString::number(P5));
 }
 
 void MainWindow::updateHeaters()
@@ -589,6 +595,7 @@ void MainWindow::on_Pos1_Button_clicked()
         P1Name = QInputDialog::getText(this, tr("Position 1"), tr("Set name:"), QLineEdit::Normal, tr("1"), &ok);
         ui->Pos1_Button->setText(P1Name);
         P1 = ui->Motor_Display->value();
+        ui->Pos1_Button->setToolTip("go to " + QString::number(P1));
     }
     else
     {
@@ -608,6 +615,7 @@ void MainWindow::on_Pos2_Button_clicked()
         P2Name = QInputDialog::getText(this, tr("Position 2"), tr("Set name:"), QLineEdit::Normal, tr("2"), &ok);
         ui->Pos2_Button->setText(P2Name);
         P2 = ui->Motor_Display->value();
+        ui->Pos1_Button->setToolTip("go to " + QString::number(P2));
     }
     else
     {
@@ -627,6 +635,7 @@ void MainWindow::on_Pos3_Button_clicked()
         P3Name = QInputDialog::getText(this, tr("Position 3"), tr("Set name:"), QLineEdit::Normal, tr("3"), &ok);
         ui->Pos3_Button->setText(P3Name);
         P3 = ui->Motor_Display->value();
+        ui->Pos1_Button->setToolTip("go to " + QString::number(P3));
     }
     else
     {
@@ -646,6 +655,7 @@ void MainWindow::on_Pos4_Button_clicked()
         P4Name = QInputDialog::getText(this, tr("Position 4"), tr("Set name:"), QLineEdit::Normal, tr("4"), &ok);
         ui->Pos4_Button->setText(P4Name);
         P4 = ui->Motor_Display->value();
+        ui->Pos1_Button->setToolTip("go to " + QString::number(P4));
     }
     else
     {
@@ -665,6 +675,7 @@ void MainWindow::on_Pos5_Button_clicked()
         P5Name = QInputDialog::getText(this, tr("Position 5"), tr("Set name:"), QLineEdit::Normal, tr("5"), &ok);
         ui->Pos5_Button->setText(P5Name);
         P5 = ui->Motor_Display->value();
+        ui->Pos1_Button->setToolTip("go to " + QString::number(P5));
     }
     else
     {
