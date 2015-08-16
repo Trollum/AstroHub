@@ -12712,7 +12712,7 @@ Each DS18B20 has a unique 64-bit serial code, which allows multiple DS18B20s to 
 <part name="GND1" library="supply1" deviceset="GND" device=""/>
 <part name="DHT22" library="pinhead" deviceset="PINHD-1X3" device=""/>
 <part name="R10" library="resistor" deviceset="R-EU_" device="R0603" value="1k"/>
-<part name="R11" library="resistor" deviceset="R-EU_" device="R0603" value="1k5"/>
+<part name="R11" library="resistor" deviceset="R-EU_" device="R0603" value="3k3"/>
 <part name="GND4" library="supply1" deviceset="GND" device=""/>
 <part name="GND5" library="supply1" deviceset="GND" device=""/>
 <part name="C1" library="resistor" deviceset="C-EU" device="C0603" value="100n"/>
@@ -12747,7 +12747,7 @@ Each DS18B20 has a unique 64-bit serial code, which allows multiple DS18B20s to 
 <part name="R20" library="resistor" deviceset="R-EU_" device="R0603" value="10k"/>
 <part name="R21" library="resistor" deviceset="R-EU_" device="R0603" value="10k"/>
 <part name="GND9" library="supply1" deviceset="GND" device=""/>
-<part name="R17" library="resistor" deviceset="R-EU_" device="R0603" value="1k5"/>
+<part name="R17" library="resistor" deviceset="R-EU_" device="R0603" value="3k3"/>
 <part name="R18" library="resistor" deviceset="R-EU_" device="R0603" value="1k"/>
 <part name="A2_A3" library="pinhead" deviceset="PINHD-1X2" device=""/>
 </parts>
