@@ -51,8 +51,8 @@
 QString send;
 int TextBrowserLines = 0;
 int PWMtemp;
-int stepperDir;
-double VDivider;
+int stepperDir = 1  ;
+double VDivider = 4.3;
 
 //! [0]
 MainWindow::MainWindow(QWidget *parent) :
@@ -72,7 +72,7 @@ MainWindow::MainWindow(QWidget *parent) :
     settings = new SettingsDialog;
 
     QIntValidator* Move_Validator = new QIntValidator(-99999, 99999, this);
-    QIntValidator* MoveTo_Validator = new QIntValidator(0, 999999, this);
+    QIntValidator* MoveTo_Validator = new QIntValidator(-999999, 999999, this);
     ui->Move_Edit->setValidator(Move_Validator);
     ui->MoveTo_Edit->setValidator(MoveTo_Validator);
 
@@ -352,6 +352,8 @@ void MainWindow::updateHeaters()
         send.append('\n');
 
         serial->write(send.toLocal8Bit());
+        ui->PWM1_Display->display(QString::number(PWMtemp));
+        ui->PWM1_Slider->setValue(PWMtemp);
     }
 
     if (ui->PWM2_Heater->isChecked())
@@ -362,6 +364,8 @@ void MainWindow::updateHeaters()
         send.append('\n');
 
         serial->write(send.toLocal8Bit());
+        ui->PWM2_Display->display(QString::number(PWMtemp));
+        ui->PWM2_Slider->setValue(PWMtemp);
     }
 
     if (ui->PWM3_Heater->isChecked())
@@ -372,6 +376,8 @@ void MainWindow::updateHeaters()
         send.append('\n');
 
         serial->write(send.toLocal8Bit());
+        ui->PWM3_Display->display(QString::number(PWMtemp));
+        ui->PWM3_Slider->setValue(PWMtemp);
     }
 
     if (ui->PWM4_Heater->isChecked())
@@ -382,6 +388,8 @@ void MainWindow::updateHeaters()
         send.append('\n');
 
         serial->write(send.toLocal8Bit());
+        ui->PWM4_Display->display(QString::number(PWMtemp));
+        ui->PWM4_Slider->setValue(PWMtemp);
     }
 }
 
@@ -558,7 +566,8 @@ void MainWindow::on_M1000_Button_clicked()
 
 void MainWindow::on_Move_Button_clicked()
 {
-    if (ui->Move_Edit->text() != "" && ui->Move_Edit->text() != "0") moveStepper(ui->Move_Edit->text().toInt());
+    if (ui->Move_Edit->text() != "" && ui->Move_Edit->text() != "0")
+        moveStepper(ui->Move_Edit->text().toInt());
     ui->Move_Edit->clear();
 }
 
