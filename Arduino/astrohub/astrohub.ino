@@ -161,7 +161,7 @@ void serialCommand(String command) {
   String param = command.substring(2); 
   String answer = String(command.charAt(0));
   answer += ":";
-  int val;
+  long val;
 
 // P - set PWM
 // M - move x steps
@@ -191,7 +191,8 @@ void serialCommand(String command) {
       break;     
     case 'M':
       val = param.substring(0).toInt();
-      stepper.moveTo(stepper.currentPosition() + val);
+      stepper.move(val);
+      break;
       //Serial.println(val);
     case 'H': 
       stepper.stop();
