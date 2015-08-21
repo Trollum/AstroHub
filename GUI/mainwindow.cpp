@@ -51,7 +51,7 @@
 QString send;
 int TextBrowserLines = 0;
 int PWMtemp;
-int stepperDir = 1  ;
+int stepperDir = 1;
 double VDivider = 4.3;
 
 //! [0]
@@ -152,7 +152,37 @@ void MainWindow::openSerialPort()
 void MainWindow::closeSerialPort()
 {
     if (serial->isOpen())
+    {
+        send = "P:1:0";
+        send.append('\n');
+        serial->write(send.toLocal8Bit());
+        ui->PWM1_Slider->setValue(0);
+        ui->PWM1_Heater->setChecked(false);
+        ui->PWM1_Check->setChecked(false);
+
+        send = "P:2:0";
+        send.append('\n');
+        serial->write(send.toLocal8Bit());
+        ui->PWM2_Slider->setValue(0);
+        ui->PWM2_Heater->setChecked(false);
+        ui->PWM2_Check->setChecked(false);
+
+        send = "P:3:0";
+        send.append('\n');
+        serial->write(send.toLocal8Bit());
+        ui->PWM3_Slider->setValue(0);
+        ui->PWM3_Heater->setChecked(false);
+        ui->PWM3_Check->setChecked(false);
+
+        send = "P:4:0";
+        send.append('\n');
+        serial->write(send.toLocal8Bit());
+        ui->PWM4_Slider->setValue(0);
+        ui->PWM4_Heater->setChecked(false);
+        ui->PWM4_Check->setChecked(false);
+
         serial->close();
+    }
     ui->actionConnect->setEnabled(true);
     ui->actionDisconnect->setEnabled(false);
     ui->actionConfigure->setEnabled(true);

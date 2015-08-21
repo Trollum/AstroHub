@@ -90,6 +90,10 @@ void SettingsDialog::showPortInfo(int idx)
     if (idx == -1)
         return;
 
+    if (stepperDir == -1) ui->Dir_Check->setChecked(true);
+    else ui->Dir_Check->setChecked(false);
+    ui->VDivider_Edit->setValue(VDivider);
+
     QStringList list = ui->serialPortInfoListBox->itemData(idx).toStringList();
     ui->descriptionLabel->setText(tr("Description: %1").arg(list.count() > 1 ? list.at(1) : tr(blankString)));
     ui->manufacturerLabel->setText(tr("Manufacturer: %1").arg(list.count() > 2 ? list.at(2) : tr(blankString)));
