@@ -88,9 +88,12 @@ void readSensors()
   currentTemp = DHT.temperature;
   currentHum = DHT.humidity;
   currentDewpoint = dewPoint(currentTemp, currentHum);
-  Serial.println("T:" + formatFloat(currentTemp, 6, 2));
-  Serial.println("W:" + formatLong(currentHum, 3));
-  Serial.println("D:" + formatFloat(currentDewpoint, 6, 2));
+  Serial.print("T:");
+  Serial.println(currentTemp);
+  Serial.print("W:");
+  Serial.println(currentHum);
+  Serial.print("D:");
+  Serial.println(currentDewpoint);
   
   //readNTC();
 }
@@ -101,14 +104,18 @@ void readVoltage()
   
   sensorVcc = analogRead(AKUCHK);
   sensorVreg = analogRead(REGCHK);
-  Serial.println("V:" + formatLong(sensorVcc, 3));
-  Serial.println("C:" + formatLong(sensorVreg, 3));
+  //Serial.println(sensorVcc);
+  Serial.print("V:");
+  Serial.println(sensorVcc);
+  Serial.print("C:");
+  Serial.println(sensorVreg);
 }
 
 void readPosition()
 {
   focuserPosition = stepper.currentPosition();
-  Serial.println("O:" + formatLong(focuserPosition, 7));
+  Serial.print("O:");
+  Serial.println(focuserPosition);
 }
 
 void readNTC()
@@ -128,18 +135,9 @@ void readNTC()
   Temp = log(((10240000/NTCres) - 10000));
   Temp = 1 / (0.001129148 + (0.000234125 * Temp) + (0.0000000876741 * Temp * Temp * Temp));
   Temp = Temp - 273.15;           // Convert Kelvin to Celcius
-//  NTCres = 1023/NTCres-1;
-//  NTCres = 10000/NTCres;
-//  
-//  NTCtemperature = NTCres/10000;     // (R/Ro)
-//  NTCtemperature = log(NTCtemperature); // ln(R/Ro)
-//  NTCtemperature /= BCOEFFICIENT;                   // 1/B * ln(R/Ro)
-//  NTCtemperature += 1.0/(25+273.15); // + (1/To)
-//  NTCtemperature = 1.0/NTCtemperature;                 // Invert the value
-//  NTCtemperature -= 273.15;
-//  
-//  Serial.println("N:" + formatFloat(NTCtemperature, 6, 2));
-  Serial.println("N:" + formatFloat(Temp, 6, 2));
+
+  Serial.print("N:");
+  Serial.println(Temp);
 }
 
 void serialEvent()
@@ -176,6 +174,10 @@ void serialCommand(String command) {
 // C - get Vreg
 // O - get position
 
+// ASCOM driver
+// i - is moving
+// p - position
+
   switch(command.charAt(0)) {
     case 'P': 
       val = param.substring(2).toInt();
@@ -192,8 +194,7 @@ void serialCommand(String command) {
     case 'M':
       val = param.substring(0).toInt();
       stepper.move(val);
-      break;
-      //Serial.println(val);
+      break;  
     case 'H': 
       stepper.stop();
       break;
@@ -207,8 +208,16 @@ void serialCommand(String command) {
       stepper.setCurrentPosition(focuserPosition);
       readPosition();
       break;
-    
-    default: Serial.println("error");
+    case 'i': 
+      answer += (stepper.distanceToGo() != 0) ? "1" : "0"; 
+      Serial.println(answer);
+      break;      
+    case 'p':
+      answer += stepper.currentPosition();
+      Serial.println(answer);
+      break;  
+    default: 
+      Serial.println("error");
   }
 }
 
