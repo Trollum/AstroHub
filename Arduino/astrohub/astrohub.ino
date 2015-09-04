@@ -156,9 +156,8 @@ void serialEvent()
 
 
 void serialCommand(String command) {
-  String param = command.substring(2); 
-  String answer = String(command.charAt(0));
-  answer += ":";
+  String param = command.substring(2);
+  float currentTemp;
   long val;
 
 // P - set PWM
@@ -173,10 +172,6 @@ void serialCommand(String command) {
 // V - get Vcc
 // C - get Vreg
 // O - get position
-
-// ASCOM driver
-// i - is moving
-// p - position
 
   switch(command.charAt(0)) {
     case 'P': 
@@ -208,14 +203,6 @@ void serialCommand(String command) {
       stepper.setCurrentPosition(focuserPosition);
       readPosition();
       break;
-    case 'i': 
-      answer += (stepper.distanceToGo() != 0) ? "1" : "0"; 
-      Serial.println(answer);
-      break;      
-    case 'p':
-      answer += stepper.currentPosition();
-      Serial.println(answer);
-      break;  
     default: 
       Serial.println("error");
   }
