@@ -1,9 +1,0 @@
-D:\Dokumenty\Visual Studio 2010\Projects\AstroHubTest\AstroHubTest\bin\Release\AstroHub.dll.config
-D:\Dokumenty\Visual Studio 2010\Projects\AstroHubTest\AstroHubTest\bin\Release\AstroHub.dll
-D:\Dokumenty\Visual Studio 2010\Projects\AstroHubTest\AstroHubTest\bin\Release\AstroHub.pdb
-D:\Dokumenty\Visual Studio 2010\Projects\AstroHubTest\AstroHubTest\obj\Release\ASCOM.AstroHub.AstroHubViewer.resources
-D:\Dokumenty\Visual Studio 2010\Projects\AstroHubTest\AstroHubTest\obj\Release\ASCOM.AstroHub.Resources.resources
-D:\Dokumenty\Visual Studio 2010\Projects\AstroHubTest\AstroHubTest\obj\Release\ASCOM.AstroHub.SetupDialogForm.resources
-D:\Dokumenty\Visual Studio 2010\Projects\AstroHubTest\AstroHubTest\obj\Release\AstroHubTest.vbproj.GenerateResource.Cache
-D:\Dokumenty\Visual Studio 2010\Projects\AstroHubTest\AstroHubTest\obj\Release\AstroHub.dll
-D:\Dokumenty\Visual Studio 2010\Projects\AstroHubTest\AstroHubTest\obj\Release\AstroHub.pdb
