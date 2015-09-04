@@ -1,0 +1,10 @@
+D:\Dokumenty\Visual Studio 2010\Projects\AstroHubTest\AstroHubtesete\obj\x86\Debug\ASCOM.AstroHubTest2.Form1.resources
+D:\Dokumenty\Visual Studio 2010\Projects\AstroHubTest\AstroHubtesete\obj\x86\Debug\ASCOM.AstroHubTest2.Resources.resources
+D:\Dokumenty\Visual Studio 2010\Projects\AstroHubTest\AstroHubtesete\obj\x86\Debug\AstroHubtesete.vbproj.GenerateResource.Cache
+D:\Dokumenty\Visual Studio 2010\Projects\AstroHubTest\AstroHubtesete\bin\Debug\AstroHubTest2.exe.config
+D:\Dokumenty\Visual Studio 2010\Projects\AstroHubTest\AstroHubtesete\bin\Debug\AstroHubTest2.exe
+D:\Dokumenty\Visual Studio 2010\Projects\AstroHubTest\AstroHubtesete\bin\Debug\AstroHubTest2.pdb
+D:\Dokumenty\Visual Studio 2010\Projects\AstroHubTest\AstroHubtesete\bin\Debug\AstroHubTest2.xml
+D:\Dokumenty\Visual Studio 2010\Projects\AstroHubTest\AstroHubtesete\obj\x86\Debug\AstroHubTest2.exe
+D:\Dokumenty\Visual Studio 2010\Projects\AstroHubTest\AstroHubtesete\obj\x86\Debug\AstroHubTest2.xml
+D:\Dokumenty\Visual Studio 2010\Projects\AstroHubTest\AstroHubtesete\obj\x86\Debug\AstroHubTest2.pdb
