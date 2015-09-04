@@ -40,6 +40,7 @@ Timer timer;
 //GLOBAL
 String inputString;                  // Serial input command string (terminated with \n)
 long focuserPosition;
+int voltageIterator, sensorVcc, sensorVreg;
 
 void setup()
 {
@@ -47,6 +48,9 @@ void setup()
   Serial.begin(9600);
   Serial.setTimeout(2000);
   inputString = "";
+  voltageIterator = 0;
+  sensorVcc = 0;
+  sensorVreg = 0;
   
   //pinMode(PWM1, OUTPUT);
   analogWrite(PWM1, 0);
@@ -69,7 +73,7 @@ void setup()
   //initializeProperties();
     
   timer.every(500, readPosition);
-  timer.every(1000, readVoltage);
+  timer.every(100, readVoltage);
   //timer.every(1000, readNTC);
   if (chk == DHTLIB_OK) timer.every(3000, readSensors);
 }
@@ -100,15 +104,20 @@ void readSensors()
 
 void readVoltage()
 {
-  int sensorVcc, sensorVreg;
+  sensorVcc += analogRead(AKUCHK);
+  sensorVreg += analogRead(REGCHK);
+  voltageIterator++;
   
-  sensorVcc = analogRead(AKUCHK);
-  sensorVreg = analogRead(REGCHK);
-  //Serial.println(sensorVcc);
-  Serial.print("V:");
-  Serial.println(sensorVcc);
-  Serial.print("C:");
-  Serial.println(sensorVreg);
+  if (voltageIterator > 9)
+  {
+    Serial.print("V:");
+    Serial.println(sensorVcc/10);
+    Serial.print("C:");
+    Serial.println(sensorVreg/10);
+    sensorVcc = 0 ;
+    sensorVreg = 0;
+    voltageIterator = 0;
+  }
 }
 
 void readPosition()
