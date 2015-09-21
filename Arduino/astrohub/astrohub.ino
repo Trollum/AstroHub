@@ -1,4 +1,4 @@
-#include <OneWire.h>
+//#include <OneWire.h>
 //#include <DallasTemperature.h>
 #include <dht.h>
 //#include <Stepper.h>
