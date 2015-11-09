@@ -75,6 +75,7 @@ Partial Class AstroHubViewer
         Me.M100_Button = New System.Windows.Forms.Button()
         Me.TextBox1 = New System.Windows.Forms.TextBox()
         Me.Dir_Check = New System.Windows.Forms.CheckBox()
+        Me.Button1 = New System.Windows.Forms.Button()
         CType(Me.PWM1_Slider, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PWM2_Slider, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PWM3_Slider, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -609,11 +610,21 @@ Partial Class AstroHubViewer
         Me.Dir_Check.Text = "Reverse stepper"
         Me.Dir_Check.UseVisualStyleBackColor = True
         '
+        'Button1
+        '
+        Me.Button1.Location = New System.Drawing.Point(490, 328)
+        Me.Button1.Name = "Button1"
+        Me.Button1.Size = New System.Drawing.Size(75, 23)
+        Me.Button1.TabIndex = 54
+        Me.Button1.Text = "Button1"
+        Me.Button1.UseVisualStyleBackColor = True
+        '
         'AstroHubViewer
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(732, 359)
+        Me.Controls.Add(Me.Button1)
         Me.Controls.Add(Me.Dir_Check)
         Me.Controls.Add(Me.TextBox1)
         Me.Controls.Add(Me.M100_Button)
@@ -732,4 +743,5 @@ Partial Class AstroHubViewer
     Friend WithEvents M100_Button As System.Windows.Forms.Button
     Friend WithEvents TextBox1 As System.Windows.Forms.TextBox
     Friend WithEvents Dir_Check As System.Windows.Forms.CheckBox
+    Friend WithEvents Button1 As System.Windows.Forms.Button
 End Class

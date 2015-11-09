@@ -180,7 +180,25 @@ Public Class Focuser
         Dim commandToSend As String = Command
         'commandToSend = Command + Constants.vbLf
         ComPort.Write(commandToSend)
-        Dim answer As String = ComPort.ReadTo(vbNewLine)
+        Dim str2 As String = ComPort.ReadTo(vbNewLine)
+        Dim charac = Left(Command, 1)
+        Dim answer As String = ""
+
+        'Console.WriteLine(str2)
+        Select Case charac
+
+            Case "t"
+                answer = Temp.ToString
+                'Console.WriteLine(answer)
+            Case "h"
+                answer = Hum.ToString
+                'Console.WriteLine(answer)
+            Case "d"
+                answer = DewPoint.ToString
+                'Console.WriteLine(answer)
+
+        End Select
+
         Return answer
     End Function
 

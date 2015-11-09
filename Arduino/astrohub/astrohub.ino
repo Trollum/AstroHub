@@ -6,13 +6,13 @@
 #include <Timer.h>
 
 //INITS
-/*
+
 //DS1820
-#define TEMP_SENSOR_PIN 4
-OneWire oneWire(TEMP_SENSOR_PIN);
-DallasTemperature tempSensor(&oneWire);
-DeviceAddress insideThermometer;
-*/
+//#define TEMP_SENSOR_PIN 4
+//OneWire oneWire(TEMP_SENSOR_PIN);
+//DallasTemperature tempSensor(&oneWire);
+//DeviceAddress insideThermometer;
+
 //DHT22
 #define DHTPIN 2
 #define DHTTYPE DHT22
@@ -41,6 +41,7 @@ Timer timer;
 String inputString;                  // Serial input command string (terminated with \n)
 long focuserPosition;
 int voltageIterator, sensorVcc, sensorVreg;
+float currentTemp, currentHum, currentDewpoint; 
 
 void setup()
 {
@@ -86,8 +87,8 @@ void loop()
 
 void readSensors()
 {
-  float currentTemp, currentHum, currentDewpoint; 
-
+  float tempC;
+  
   DHT.read22(DHTPIN);
   currentTemp = DHT.temperature;
   currentHum = DHT.humidity;
@@ -98,6 +99,11 @@ void readSensors()
   Serial.println(currentHum);
   Serial.print("D:");
   Serial.println(currentDewpoint);
+  
+//  tempSensor.requestTemperatures();
+//  tempC = tempSensor.getTempCByIndex(0);
+//  Serial.print("N:");
+//  Serial.println(tempC);
   
   //readNTC();
 }
@@ -224,7 +230,19 @@ void serialCommand(String command) {
     case 'p':
       answer += stepper.currentPosition();
       Serial.println(answer);
+      break;
+    case 't':
+      Serial.print("t:");
+      Serial.println(currentTemp);
       break;  
+    case 'h':
+      Serial.print("h:");
+      Serial.println(currentHum);  
+      break;  
+    case 'd':
+      Serial.print("d:");
+      Serial.println(currentDewpoint);
+      break;    
     default: 
       Serial.println("error");
   }
