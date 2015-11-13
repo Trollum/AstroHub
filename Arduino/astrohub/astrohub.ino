@@ -1,7 +1,6 @@
 //#include <OneWire.h>
 //#include <DallasTemperature.h>
 #include <dht.h>
-//#include <Stepper.h>
 #include <AccelStepper.h>
 #include <Timer.h>
 
@@ -27,13 +26,6 @@ dht DHT;
 #define REGCHK A6
 #define AKUCHK A0
 
-const int stepsPerRevolution = 1600;  // change this to fit the number of steps per revolution
-// for your motor
-
-
-// initialize the stepper library on pins 8 through 11:
-//Stepper myStepper(stepsPerRevolution, 7,);
-
 AccelStepper stepper (1,7,8);
 Timer timer;
 
@@ -45,7 +37,6 @@ float currentTemp, currentHum, currentDewpoint;
 
 void setup()
 {
-  //Serial init
   Serial.begin(9600);
   Serial.setTimeout(2000);
   inputString = "";
@@ -56,13 +47,9 @@ void setup()
   currentHum = 0;
   currentDewpoint = 0;
   
-  //pinMode(PWM1, OUTPUT);
   analogWrite(PWM1, 0);
-  //pinMode(PWM2, OUTPUT);
   analogWrite(PWM2, 0);
-  //pinMode(PWM3, OUTPUT);
   analogWrite(PWM3, 0);
-  //pinMode(PWM4, OUTPUT);
   analogWrite(PWM4, 0);
   pinMode(NTC, INPUT);
   pinMode(REGCHK, INPUT);
@@ -74,7 +61,6 @@ void setup()
   stepper.setMaxSpeed(400);
   stepper.setAcceleration(1600);
   stepper.setCurrentPosition(0);
-  //initializeProperties();
     
   timer.every(500, readPosition);
   timer.every(100, readVoltage);
@@ -178,7 +164,6 @@ void serialEvent()
   }  
 }
 
-
 void serialCommand(String command) {
   String param = command.substring(2); 
   String answer = String(command.charAt(0));
@@ -201,6 +186,9 @@ void serialCommand(String command) {
 // ASCOM driver
 // i - is moving
 // p - position
+// t - request temperature
+// h - request humidity
+// d - request dew point
 
   switch(command.charAt(0)) {
     case 'P': 
@@ -275,18 +263,3 @@ double dewPoint(double celsius, double humidity)
   double T = log(VP/0.61078);   // temp var
   return (241.88 * T) / (17.558 - T);
 }
-
-String formatFloat(float value, byte length, byte precision)
-{
-  char tmp [length + 1];
-  dtostrf(value, length, precision, tmp);  
-  return String(tmp);
-}
-
-String formatLong(long value, byte length)
-{
-  char tmp [length + 1];
-  dtostrf(value, length, 0, tmp);  
-  return String(tmp);
-}
-
