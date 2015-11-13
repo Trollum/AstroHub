@@ -5,4 +5,7 @@
  
  Application to controll AstroHub can be found here: https://sourceforge.net/projects/astrohub/
  
+ ## APT
+ APT 3.00 with connected AstroHub shows temperature, humidity and dew point, when DHT22 sensor is connected.
+ 
  If you have any questions, you can send me a mail: jakub.bartas(na)gmail.com

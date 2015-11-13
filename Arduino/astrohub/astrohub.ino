@@ -52,6 +52,9 @@ void setup()
   voltageIterator = 0;
   sensorVcc = 0;
   sensorVreg = 0;
+  currentTemp = 0;
+  currentHum = 0;
+  currentDewpoint = 0;
   
   //pinMode(PWM1, OUTPUT);
   analogWrite(PWM1, 0);
@@ -75,8 +78,14 @@ void setup()
     
   timer.every(500, readPosition);
   timer.every(100, readVoltage);
+  if (chk == DHTLIB_OK)
+  {    
+    currentTemp = DHT.temperature;
+    currentHum = DHT.humidity;
+    currentDewpoint = dewPoint(currentTemp, currentHum);
+    timer.every(3000, readSensors);
+  }
   //timer.every(1000, readNTC);
-  if (chk == DHTLIB_OK) timer.every(3000, readSensors);
 }
 
 void loop()
@@ -87,7 +96,7 @@ void loop()
 
 void readSensors()
 {
-  float tempC;
+//  float tempC;
   
   DHT.read22(DHTPIN);
   currentTemp = DHT.temperature;
@@ -105,7 +114,7 @@ void readSensors()
 //  Serial.print("N:");
 //  Serial.println(tempC);
   
-  //readNTC();
+//  readNTC();
 }
 
 void readVoltage()
@@ -205,6 +214,7 @@ void serialCommand(String command) {
         case '4': analogWrite(PWM4, map(val, 0, 100, 0, 255)); break;
         default: break;
       }
+      Serial.println("OK");
       break;     
     case 'M':
       val = param.substring(0).toInt();

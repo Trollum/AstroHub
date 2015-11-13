@@ -104,6 +104,7 @@ Partial Class SetupDialogForm
         Me.COM1.Name = "COM1"
         Me.COM1.Size = New System.Drawing.Size(87, 21)
         Me.COM1.TabIndex = 9
+        Me.COM1.Text = Global.ASCOM.AstroHub.My.MySettings.Default.CommPort
         '
         'SetupDialogForm
         '

@@ -11,11 +11,17 @@ Public Class AstroHubViewer
     Delegate Sub SetTemperature2Callback(ByVal temp2 As Double)
     Delegate Sub SetVccCallback(ByVal vcc As Double)
     Delegate Sub SetVregCallback(ByVal vreg As Double)
+    Delegate Sub SetTextBoxCallback(ByVal str As String)
+    Delegate Sub SetHeater1Callback(ByVal PWM As Int16)
+    Delegate Sub SetHeater2Callback(ByVal PWM As Int16)
+    Delegate Sub SetHeater3Callback(ByVal PWM As Int16)
+    Delegate Sub SetHeater4Callback(ByVal PWM As Int16)
 
     Private DirCheck As Integer = 1
     Private VDivider As Double = 4.25
     Private AHub As Focuser
     Private monitorTimer As System.Timers.Timer
+    Private HeaterTimer As System.Timers.Timer
 
     Public Sub New()
 
@@ -25,6 +31,11 @@ Public Class AstroHubViewer
         monitorTimer.Interval = 250
         monitorTimer.Enabled = True
         AddHandler monitorTimer.Elapsed, AddressOf OnMonitorTimer
+
+        HeaterTimer = New System.Timers.Timer()
+        HeaterTimer.Interval = 5000
+        HeaterTimer.Enabled = True
+        AddHandler HeaterTimer.Elapsed, AddressOf OnHeaterTimer
 
     End Sub
 
@@ -36,6 +47,10 @@ Public Class AstroHubViewer
         SetTemperature2(AstroHub.Focuser.Temp2)
         SetVcc(AstroHub.Focuser.Vcc)
         SetVreg(AstroHub.Focuser.Vreg)
+    End Sub
+
+    Private Sub OnHeaterTimer(sender As Object, e As Timers.ElapsedEventArgs)
+        UpdateHeaters()
     End Sub
 
     Public WriteOnly Property focuser() As Focuser
@@ -56,7 +71,7 @@ Public Class AstroHubViewer
             PWM1_Slider.Enabled = state
             PWM1_Slider.Value = 0
             PWM1_Display.Text = 0
-            TextBox1.AppendText("P:1:0" + vbNewLine)
+            SetTextBox("P:1:0" + vbNewLine)
             AHub.CommandString("P:1:0" + vbNewLine)
         End If
     End Sub
@@ -73,7 +88,7 @@ Public Class AstroHubViewer
             PWM2_Slider.Enabled = state
             PWM2_Slider.Value = 0
             PWM2_Display.Text = 0
-            TextBox1.AppendText("P:2:0" + vbNewLine)
+            SetTextBox("P:2:0" + vbNewLine)
             AHub.CommandString("P:2:0" + vbNewLine)
         End If
     End Sub
@@ -90,7 +105,7 @@ Public Class AstroHubViewer
             PWM3_Slider.Enabled = state
             PWM3_Slider.Value = 0
             PWM3_Display.Text = 0
-            TextBox1.AppendText("P:3:0" + vbNewLine)
+            SetTextBox("P:3:0" + vbNewLine)
             AHub.CommandString("P:3:0" + vbNewLine)
         End If
     End Sub
@@ -107,7 +122,7 @@ Public Class AstroHubViewer
             PWM4_Slider.Enabled = state
             PWM4_Slider.Value = 0
             PWM4_Display.Text = 0
-            TextBox1.AppendText("P:4:0" + vbNewLine)
+            SetTextBox("P:4:0" + vbNewLine)
             AHub.CommandString("P:4:0" + vbNewLine)
         End If
     End Sub
@@ -116,36 +131,67 @@ Public Class AstroHubViewer
         Dim send As String = "P:1:" + PWM1_Slider.Value.ToString + vbNewLine
         PWM1_Display.Text = PWM1_Slider.Value.ToString
         'send.StartsWith()
-        TextBox1.AppendText(send)
+        SetTextBox(send)
         AHub.CommandString(send)
     End Sub
 
     Private Sub PWM2_Slider_Scroll(sender As System.Object, e As System.EventArgs) Handles PWM2_Slider.Scroll
         Dim send As String = "P:2:" + PWM2_Slider.Value.ToString + vbNewLine
         PWM2_Display.Text = PWM2_Slider.Value.ToString
-        TextBox1.AppendText(send)
+        SetTextBox(send)
         AHub.CommandString(send)
     End Sub
 
     Private Sub PWM3_Slider_Scroll(sender As System.Object, e As System.EventArgs) Handles PWM3_Slider.Scroll
         Dim send As String = "P:3:" + PWM3_Slider.Value.ToString + vbNewLine
         PWM3_Display.Text = PWM3_Slider.Value.ToString
-        TextBox1.AppendText(send)
+        SetTextBox(send)
         AHub.CommandString(send)
     End Sub
 
     Private Sub PWM4_Slider_Scroll(sender As System.Object, e As System.EventArgs) Handles PWM4_Slider.Scroll
         Dim send As String = "P:4:" + PWM4_Slider.Value.ToString + vbNewLine
         PWM4_Display.Text = PWM4_Slider.Value.ToString
-        TextBox1.AppendText(send)
+        SetTextBox(send)
         AHub.CommandString(send)
+    End Sub
+
+    Private Sub UpdateHeaters()
+        Dim PWMtemp As Int16 = (AstroHub.Focuser.Hum - 50) * 2
+        Console.WriteLine(PWMtemp)
+        If (PWMtemp < 0) Then PWMtemp = 0
+        If (PWMtemp > 100) Then PWMtemp = 100
+
+        If (PWM1_Heater.Checked = True) Then
+            SetTextBox("P:1:" + PWMtemp.ToString + vbNewLine)
+            AHub.CommandString("P:1:" + PWMtemp.ToString + vbNewLine)
+            SetHeater1(PWMtemp)
+        End If
+
+        If (PWM2_Heater.Checked = True) Then
+            SetTextBox("P:2:" + PWMtemp.ToString + vbNewLine)
+            AHub.CommandString("P:2:" + PWMtemp.ToString + vbNewLine)
+            SetHeater2(PWMtemp)
+        End If
+
+        If (PWM3_Heater.Checked = True) Then
+            SetTextBox("P:3:" + PWMtemp.ToString + vbNewLine)
+            AHub.CommandString("P:3:" + PWMtemp.ToString + vbNewLine)
+            SetHeater3(PWMtemp)
+        End If
+
+        If (PWM4_Heater.Checked = True) Then
+            SetTextBox("P:4:" + PWMtemp.ToString + vbNewLine)
+            AHub.CommandString("P:4:" + PWMtemp.ToString + vbNewLine)
+            SetHeater4(PWMtemp)
+        End If
     End Sub
 
     Private Sub moveStepper(ByRef value As Integer)
         Dim send As String = "M:" + value.ToString + vbNewLine
         Dim steps As Integer = AstroHub.Focuser.positionCache + value
         AHub.Move(steps)
-        TextBox1.AppendText(send)
+        SetTextBox(send)
     End Sub
 
     Private Sub P1000_Button_Click(sender As System.Object, e As System.EventArgs) Handles P1000_Button.Click
@@ -167,7 +213,7 @@ Public Class AstroHubViewer
     Private Sub Stop_Button_Click(sender As System.Object, e As System.EventArgs) Handles Stop_Button.Click
         Dim send As String = "H:1" + vbNewLine
         AHub.Halt()
-        TextBox1.AppendText(send)
+        SetTextBox(send)
     End Sub
 
     Private Sub M1_Button_Click(sender As System.Object, e As System.EventArgs) Handles M1_Button.Click
@@ -193,7 +239,7 @@ Public Class AstroHubViewer
     Private Sub MoveTo_Button_Click(sender As System.Object, e As System.EventArgs) Handles MoveTo_Button.Click
         Dim send As String = "S:" + MoveTo_Edit.Value.ToString + vbNewLine
         AHub.Move(send)
-        TextBox1.AppendText(send)
+        SetTextBox(send)
     End Sub
 
     Private Sub Dir_Check_CheckedChanged(sender As System.Object, e As System.EventArgs) Handles Dir_Check.CheckedChanged
@@ -225,6 +271,7 @@ Public Class AstroHubViewer
         PWM4_Slider.Enabled = Not state
     End Sub
 
+#Region "callbacks"
     Private Sub SetMotor(ByVal pos As Integer)
         If Me.Motor_Display.InvokeRequired Then
             Dim d As New SetMotorCallback(AddressOf SetMotor)
@@ -288,7 +335,65 @@ Public Class AstroHubViewer
         End If
     End Sub
 
-    Private Sub Button1_Click(sender As System.Object, e As System.EventArgs) Handles Button1.Click
-        AHub.CommandString("h")
+    Private Sub SetTextBox(ByVal str As String)
+        If Me.Vreg_Display.InvokeRequired Then
+            Dim d As New SetTextBoxCallback(AddressOf SetTextBox)
+            Me.Invoke(d, New Object() {str})
+        Else
+            Me.TextBox1.AppendText(str)
+        End If
     End Sub
+
+    Private Sub SetHeater1(ByVal PWM As Int16)
+        If Me.PWM1_Slider.InvokeRequired Then
+            Dim d As New SetHeater1Callback(AddressOf SetHeater1)
+            Me.Invoke(d, New Object() {PWM})
+        ElseIf Me.PWM1_Display.InvokeRequired Then
+            Dim d As New SetHeater1Callback(AddressOf SetHeater1)
+            Me.Invoke(d, New Object() {PWM})
+        Else
+            Me.PWM1_Slider.Value = PWM
+            Me.PWM1_Display.Text = PWM
+        End If
+    End Sub
+
+    Private Sub SetHeater2(ByVal PWM As Int16)
+        If Me.PWM2_Slider.InvokeRequired Then
+            Dim d As New SetHeater2Callback(AddressOf SetHeater2)
+            Me.Invoke(d, New Object() {PWM})
+        ElseIf Me.PWM2_Display.InvokeRequired Then
+            Dim d As New SetHeater2Callback(AddressOf SetHeater2)
+            Me.Invoke(d, New Object() {PWM})
+        Else
+            Me.PWM2_Slider.Value = PWM
+            Me.PWM2_Display.Text = PWM
+        End If
+    End Sub
+
+    Private Sub SetHeater3(ByVal PWM As Int16)
+        If Me.PWM3_Slider.InvokeRequired Then
+            Dim d As New SetHeater3Callback(AddressOf SetHeater3)
+            Me.Invoke(d, New Object() {PWM})
+        ElseIf Me.PWM3_Display.InvokeRequired Then
+            Dim d As New SetHeater3Callback(AddressOf SetHeater3)
+            Me.Invoke(d, New Object() {PWM})
+        Else
+            Me.PWM3_Slider.Value = PWM
+            Me.PWM3_Display.Text = PWM
+        End If
+    End Sub
+
+    Private Sub SetHeater4(ByVal PWM As Int16)
+        If Me.PWM4_Slider.InvokeRequired Then
+            Dim d As New SetHeater4Callback(AddressOf SetHeater4)
+            Me.Invoke(d, New Object() {PWM})
+        ElseIf Me.PWM4_Display.InvokeRequired Then
+            Dim d As New SetHeater4Callback(AddressOf SetHeater4)
+            Me.Invoke(d, New Object() {PWM})
+        Else
+            Me.PWM4_Slider.Value = PWM
+            Me.PWM4_Display.Text = PWM
+        End If
+    End Sub
+#End Region
 End Class

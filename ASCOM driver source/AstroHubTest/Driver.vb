@@ -188,12 +188,15 @@ Public Class Focuser
         Select Case charac
 
             Case "t"
+                Temp = Convert.ToDouble(Val(Mid(str2, 3)))
                 answer = Temp.ToString
                 'Console.WriteLine(answer)
             Case "h"
+                Hum = Convert.ToDouble(Val(Mid(str2, 3)))
                 answer = Hum.ToString
                 'Console.WriteLine(answer)
             Case "d"
+                DewPoint = Convert.ToDouble(Val(Mid(str2, 3)))
                 answer = DewPoint.ToString
                 'Console.WriteLine(answer)
 
@@ -231,6 +234,7 @@ Public Class Focuser
                 Temp = Convert.ToDouble(Val(Mid(str2, 3)))
             Case "W"
                 Hum = Convert.ToDouble(Val(Mid(str2, 3)))
+                'monitor.UpdateHeaters()
             Case "D"
                 DewPoint = Convert.ToDouble(Val(Mid(str2, 3)))
             Case "N"
@@ -248,7 +252,7 @@ Public Class Focuser
 
         End Select
 
-        'Console.WriteLine(Hum)
+        Console.WriteLine(str2)
         'monitor.TextBox1.AppendText(str)
         'monitor.TextBox1.AppendText(str2)
 
@@ -437,6 +441,7 @@ Public Class Focuser
                 System.Threading.Thread.Sleep(500)
             End If
             ComPort.Open()
+            'CommandString("r")
             'Console.WriteLine("Dot Net Perls")
         Catch ex As System.IO.IOException
             Dim msg As String = "Invalid port state: " & ex.Message & " : " & ex.Data.ToString
@@ -454,6 +459,10 @@ Public Class Focuser
     End Sub
 
     Private Sub Disconnect()
+        ComPort.Write("P:1:0" + vbNewLine)
+        ComPort.Write("P:2:0" + vbNewLine)
+        ComPort.Write("P:3:0" + vbNewLine)
+        ComPort.Write("P:4:0" + vbNewLine)
         monitor.Hide()
 
         Try
